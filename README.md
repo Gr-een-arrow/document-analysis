@@ -14,11 +14,12 @@ This system allows users to **upload documents**, **ask queries**, and receive *
 
 ---
 
+
 ## 🛠️ Tech Stack  
 
 **Backend**  
 - [Python 3.10+](https://www.python.org/)  
-- [FastAPI](https://fastapi.tiangolo.com/) – API framework  
+- [Django](https://www.djangoproject.com/) – API framework  
 - [LangChain](https://www.langchain.com/) – RAG pipeline  
 - [Sentence-Transformers](https://www.sbert.net/) – embeddings  
 - [FAISS](https://faiss.ai/) – vector database  
@@ -37,30 +38,39 @@ This system allows users to **upload documents**, **ask queries**, and receive *
 
 ---
 
-## 📂 Project Structure  
+
+**Project Structure**  
 
 ```
 document-analysis-rag/
 │── backend/
-│   ├── api/
-│   │   ├── routes.py         # FastAPI endpoints
-│   │   ├── models.py         # Pydantic models
+│   ├── manage.py                 # Django management script
+│   ├── backend/                  # Django project settings
+│   │   ├── __init__.py
+│   │   ├── settings.py           # Django settings
+│   │   ├── urls.py               # Project URLs
+│   │   ├── wsgi.py
+│   ├── api/                      # Django app for API
+│   │   ├── __init__.py
+│   │   ├── models.py             # Django models
+│   │   ├── views.py              # API views
+│   │   ├── serializers.py        # DRF serializers
+│   │   ├── urls.py               # API URLs
 │   ├── services/
-│   │   ├── parser.py         # PDF/DOCX/Excel parsing
-│   │   ├── embeddings.py     # Chunking + embeddings
-│   │   ├── vectorstore.py    # FAISS operations
-│   │   ├── rag_pipeline.py   # Retrieval + generation
-│   ├── main.py               # FastAPI entrypoint
+│   │   ├── parser.py             # PDF/DOCX/Excel parsing
+│   │   ├── embeddings.py         # Chunking + embeddings
+│   │   ├── vectorstore.py        # FAISS operations
+│   │   ├── rag_pipeline.py       # Retrieval + generation
 │
 │── frontend/
-│   ├── pages/                # Next.js pages
-│   ├── components/           # React UI components
-│   ├── public/               # Static assets
-│   ├── package.json          # Next.js dependencies
+│   ├── pages/                    # Next.js pages
+│   ├── components/               # React UI components
+│   ├── public/                   # Static assets
+│   ├── package.json              # Next.js dependencies
 │
 │── data/
-│   ├── uploads/              # Uploaded documents
-│   ├── faiss_index/          # Vector DB storage
+│   ├── uploads/                  # Uploaded documents
+│   ├── faiss_index/              # Vector DB storage
 │
 │── README.md
 │── requirements.txt
@@ -88,10 +98,12 @@ venv\Scriptsctivate      # Windows
 pip install -r requirements.txt
 ```
 
-### 4. Run backend (FastAPI)  
+
+### 4. Run backend (Django)  
 ```bash
 cd backend
-uvicorn main:app --reload
+python manage.py migrate
+python manage.py runserver
 ```
 
 
