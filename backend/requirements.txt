@@ -1,0 +1,10 @@
+# Backend requirements for Django RAG System
+Django>=4.2
+djangorestframework
+langchain
+sentence-transformers
+faiss-cpu
+pypdf
+python-docx
+openpyxl
+spacy

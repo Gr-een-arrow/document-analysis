@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+*.egg-info/
+*.egg
+*.log
+*.pot
+*.mo
+*.sqlite3
+db.sqlite3
+env/
+venv/
+.env
+.env.*
+.python-version
+
+# Django
+*.db
+local_settings.py
+media/
+staticfiles/
+
+# VSCode
+.vscode/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+Desktop.ini
+__MACOSX/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data
+data/uploads/
+data/faiss_index/
