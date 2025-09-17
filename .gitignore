@@ -23,6 +23,7 @@ venv/
 local_settings.py
 media/
 staticfiles/
+documents/
 
 # VSCode
 .vscode/
