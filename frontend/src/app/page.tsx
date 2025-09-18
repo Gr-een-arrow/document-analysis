@@ -9,21 +9,13 @@ import AOS from 'aos';
 export default function DocAnalyzerPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   // Removed dragActive state
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  // const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [userQuery, setUserQuery] = useState("");
 
   useEffect(() => {
     AOS.init();
     feather.replace();
   }, []);
-
-  // Auto-resize textarea
-  const handleInput = () => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.style.height = "auto";
-      textarea.style.height = textarea.scrollHeight + "px";
-    }
-  };
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -171,7 +163,7 @@ export default function DocAnalyzerPage() {
         {/* Drag & Drop Area removed */}
 
         {/* Chat Messages */}
-        <div className="chat-container overflow-y-auto p-4 flex-1 bg-white">
+        <div className="chat-container overflow-y-auto p-4 flex-1 bg-gray-100">
           <div className="max-w-3xl mx-auto space-y-4">
             {/* AI Message */}
             <div className="flex gap-3">
@@ -236,29 +228,31 @@ export default function DocAnalyzerPage() {
         {/* Input Area */}
         <div className="border-t border-gray-200 p-4 bg-white">
           <div className="max-w-3xl mx-auto">
+
             <div className="relative">
-              <textarea
-                ref={textareaRef}
-                className="w-full border border-gray-300 rounded-lg pl-4 pr-12 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
-                rows={1}
+              <input
+                className="w-full text-gray-700 border border-gray-300 rounded-lg pl-4 pr-12 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                type="text"
                 placeholder="Ask about your documents..."
                 style={{ minHeight: "44px", maxHeight: "120px" }}
-                onInput={handleInput}
-                // Removed dragActive handlers
+                value={userQuery}
+                onChange={e => setUserQuery(e.target.value)}
               />
-              <div className="absolute right-3 bottom-3 flex gap-1">
-                <button className="p-1 text-gray-400 hover:text-indigo-600">
+
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                {/* <button className="p-1 text-gray-400 hover:text-indigo-600">
                   <i data-feather="paperclip" className="w-5 h-5"></i>
                 </button>
                 <button className="p-1 text-gray-400 hover:text-indigo-600">
                   <i data-feather="mic" className="w-5 h-5"></i>
-                </button>
+                </button> */}
                 <button className="p-1 bg-indigo-600 text-white rounded-lg p-2 hover:bg-indigo-700 transition">
                   <i data-feather="send" className="w-5 h-5"></i>
                 </button>
               </div>
             </div>
-            <p className="text-xs text-indigo-700 mt-2">
+            
+            <p className="text-xs text-gray-700 mt-2">
               DocAnalyzer AI may produce inaccurate information. Verify details.
             </p>
           </div>
