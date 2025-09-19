@@ -4,17 +4,16 @@ from .models import ChatHistory, Document
 
 
 class ChatHistorySerializer(serializers.ModelSerializer):
+    documents = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model = ChatHistory
-        fields = ['id', 'user', 'document', 'name', 'created_at', 'modified_at', 'messages']
-        read_only_fields = ['user', 'created_at', 'messages', 'modified_at', 'document']
+        fields = ['id', 'user', 'name', 'created_at', 'modified_at', 'messages', 'documents']
+        read_only_fields = ['user', 'created_at', 'messages', 'modified_at', 'documents']
 
-    # Save function to set the user automatically
     def save(self, **kwargs):
         kwargs['user'] = self.context['request'].user
         return super().save(**kwargs)
     
-    # save only the name field on update
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
         instance.save()
@@ -24,10 +23,9 @@ class ChatHistorySerializer(serializers.ModelSerializer):
 class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
-        fields = ['id', 'user', 'name', 'file', 'doc_type', 'uploaded_at', 'metadata']
+        fields = ['id', 'user', 'chathistory', 'name', 'file', 'doc_type', 'uploaded_at', 'metadata']
         read_only_fields = ['user', 'doc_type', 'uploaded_at']
 
-    # Save function to set the user automatically
     def save(self, **kwargs):
         kwargs['user'] = self.context['request'].user
         return super().save(**kwargs)
