@@ -1,10 +1,39 @@
 from uuid import uuid4
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
-User = get_user_model()  
+class UserManager(BaseUserManager):
+    def create_user(self, email, fullname, password=None, **extra_fields):
+        if not email:
+            raise ValueError('Email is required')
 
+        if not fullname:
+            raise ValueError('Full name is required')
+
+        email = self.normalize_email(email)
+        user: User = self.model(email=email, fullname=fullname, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, fullname, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(email, fullname, password, **extra_fields)
+
+class User(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(unique=True)
+    fullname = models.CharField(max_length=255)
+    date_joined = models.DateTimeField(auto_now_add=True)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['fullname']
+
+    def __str__(self):
+        return self.email
 
 class ChatHistory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
@@ -15,7 +44,7 @@ class ChatHistory(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"ChatHistory {self.id} for {self.user.username}"
+        return f"ChatHistory {self.id} for {self.user.email}"
 
 
 class Document(models.Model):
@@ -26,7 +55,6 @@ class Document(models.Model):
     file = models.FileField(upload_to="documents/")
     doc_type = models.CharField(max_length=20)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    metadata = models.JSONField(blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -45,5 +73,7 @@ class Document(models.Model):
                 self.doc_type = 'excel'
             else:
                 self.doc_type = 'unknown'
+
+            self.name = self.file.name.split('.')[0]  # Set name without extension
 
         return super().save(*args, **kwargs)
