@@ -8,3 +8,5 @@ pypdf
 python-docx
 openpyxl
 spacy
+# JWT authentication
+djangorestframework-simplejwt
