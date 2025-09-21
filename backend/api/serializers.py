@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import ChatHistory, Document
+from .models import ChatHistory, Document, User
 
 
 class ChatHistorySerializer(serializers.ModelSerializer):
@@ -23,9 +23,26 @@ class ChatHistorySerializer(serializers.ModelSerializer):
 class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
-        fields = ['id', 'user', 'chathistory', 'name', 'file', 'doc_type', 'uploaded_at', 'metadata']
-        read_only_fields = ['user', 'doc_type', 'uploaded_at']
+        fields = ['id', 'user', 'chathistory', 'name', 'file', 'doc_type', 'uploaded_at']
+        read_only_fields = ['user', 'doc_type', 'uploaded_at', "name"]
 
     def save(self, **kwargs):
         kwargs['user'] = self.context['request'].user
         return super().save(**kwargs)
+    
+
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'fullname', 'password', 'date_joined']
+        read_only_fields = ['id', 'date_joined']
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            email=validated_data['email'],
+            fullname=validated_data['fullname'],
+            password=validated_data['password']
+        )
+        return user

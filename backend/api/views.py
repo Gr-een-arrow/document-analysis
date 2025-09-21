@@ -1,8 +1,8 @@
 from rest_framework import permissions, serializers, viewsets
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, CreateAPIView
 
-from .models import ChatHistory, Document
-from .serializers import ChatHistorySerializer, DocumentSerializer
+from .models import ChatHistory, Document, User
+from .serializers import ChatHistorySerializer, DocumentSerializer, UserSerializer
 
 
 class ChatHistoryViewSet(viewsets.ModelViewSet):
@@ -37,3 +37,13 @@ class ChatHistoryDocumentView(ListCreateAPIView):
 		if not chathistory:
 			raise serializers.ValidationError("ChatHistory not found or not owned by user.")
 		serializer.save(user=self.request.user, chathistory=chathistory)
+
+class UserCreateAPIView(CreateAPIView):
+	serializer_class = UserSerializer
+	permission_classes = [permissions.AllowAny]
+
+	def get_queryset(self):
+		return User.objects.none()  # No listing of users
+
+	def perform_create(self, serializer):
+		serializer.save()  # User creation logic is handled in the serializer
