@@ -10,3 +10,4 @@ openpyxl
 spacy
 # JWT authentication
 djangorestframework-simplejwt
+django-cors-headers
